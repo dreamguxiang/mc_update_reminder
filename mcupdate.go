@@ -273,6 +273,7 @@ func urls(b *bot.Bot) {
 								if eexx == false {
 									betas = beta
 									eexx = true
+									break OuterLoop
 								}
 								if beta != betas {
 									betas = beta
@@ -297,10 +298,11 @@ func urls(b *bot.Bot) {
 								if eexxx == false {
 									releases = release
 									eexxx = true
+									break OuterLoops
 								}
 								if release != releases {
 									releases = release
-									m := message.NewSendingMessage().Append(message.NewText("发现最新正式版：" + beta))
+									m := message.NewSendingMessage().Append(message.NewText("发现最新正式版：" + release))
 									b.SendGroupMessage(823851812, m)
 									break OuterLoops
 								}
