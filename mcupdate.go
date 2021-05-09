@@ -235,11 +235,12 @@ func GetBetweenStr(str, start, end string) string {
 	return str
 }
 
+var betas = ""
+var releases = ""
+var eexx = false
+var eexxx = false
+
 func urls(b *bot.Bot) {
-	eexx := false
-	eexxx := false
-	betas := ""
-	releases := ""
 	t1 := time.NewTimer(time.Second * 10)
 	for {
 		select {
@@ -277,7 +278,7 @@ func urls(b *bot.Bot) {
 								}
 								if beta != betas {
 									betas = beta
-									m := message.NewSendingMessage().Append(message.NewText("发现最新Beta版：" + beta))
+									m := message.NewSendingMessage().Append(message.NewText("发现新Beta版：" + beta))
 									b.SendGroupMessage(823851812, m)
 									break OuterLoop
 								}
@@ -302,7 +303,7 @@ func urls(b *bot.Bot) {
 								}
 								if release != releases {
 									releases = release
-									m := message.NewSendingMessage().Append(message.NewText("发现最新正式版：" + release))
+									m := message.NewSendingMessage().Append(message.NewText("发现新正式版：" + release))
 									b.SendGroupMessage(823851812, m)
 									break OuterLoops
 								}
