@@ -1,4 +1,4 @@
-module mcupdate
+module github.com/dreamguxiang/mcupdatebot
 
 go 1.16
 
