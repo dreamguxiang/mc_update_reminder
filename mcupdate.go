@@ -1,4 +1,4 @@
-package mcupdate
+package mcupdatebot
 
 import (
 	"bufio"
@@ -49,7 +49,7 @@ func (m *logging) PostInit() {
 func (m *logging) Serve(b *bot.Bot) {
 	// 注册服务函数部分
 	b.OnGroupMessage(func(c *client.QQClient, msg *message.GroupMessage) {
-		go update(c,msg)
+		go update(c, msg)
 	})
 	go urls(b)
 }
@@ -77,10 +77,9 @@ var instance *logging
 
 var logger = utils.GetModuleLogger("internal.logging")
 
-
 var build strings.Builder
 
-func update(c *client.QQClient, msg *message.GroupMessage){
+func update(c *client.QQClient, msg *message.GroupMessage) {
 	beta := ""
 	release := ""
 	s3 := ""
@@ -132,21 +131,21 @@ func update(c *client.QQClient, msg *message.GroupMessage){
 			}
 		}
 		for _, link := range visit(nil, doc) {
-		rds := bufio.NewReader(strings.NewReader(link))
-		for {
-			lined, err := rds.ReadString('\n')
-			res1 := strings.Contains(lined, "-Xbox-One-")
-			if err == nil || io.EOF == err {
-				if res1 == true {
-					betas := strings.Replace(GetBetweenStr(lined, "1-1", "-Xbox"), "-", ".", 3)
-					build.WriteString(betas)
-					build.WriteString("、")
-					s3 = build.String()
+			rds := bufio.NewReader(strings.NewReader(link))
+			for {
+				lined, err := rds.ReadString('\n')
+				res1 := strings.Contains(lined, "-Xbox-One-")
+				if err == nil || io.EOF == err {
+					if res1 == true {
+						betas := strings.Replace(GetBetweenStr(lined, "1-1", "-Xbox"), "-", ".", 3)
+						build.WriteString(betas)
+						build.WriteString("、")
+						s3 = build.String()
+					}
 				}
+				break
 			}
-			break
 		}
-	}
 		build.Reset()
 		for _, link := range visit(nil, doc) {
 			rds := bufio.NewReader(strings.NewReader(link))
@@ -171,16 +170,14 @@ func update(c *client.QQClient, msg *message.GroupMessage){
 	build.Reset()
 	out := msg.ToString()
 	if out == "查询最新版本" {
-		m := message.NewSendingMessage().Append(message.NewText("最新测试版："+beta+"\n最新稳定版："+release))
+		m := message.NewSendingMessage().Append(message.NewText("最新测试版：" + beta + "\n最新稳定版：" + release))
 		c.SendGroupMessage(msg.GroupCode, m)
 	}
 	if out == "查询历史版本" {
-		m := message.NewSendingMessage().Append(message.NewText("近五个版本测试版："+s3+"\n近五个版本正式版："+s33))
+		m := message.NewSendingMessage().Append(message.NewText("近五个版本测试版：" + s3 + "\n近五个版本正式版：" + s33))
 		c.SendGroupMessage(msg.GroupCode, m)
 	}
 }
-
-
 
 func visit(links []string, n *html.Node) []string {
 	if n.Type == html.ElementNode && n.Data == "a" {
