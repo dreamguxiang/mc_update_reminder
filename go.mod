@@ -1,4 +1,4 @@
-module github.com/dreamguxiang/mcupdatebot
+module github.com/dreamguxiang/mc_update_reminder
 
 go 1.16
 
