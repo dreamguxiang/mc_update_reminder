@@ -87,6 +87,8 @@ func update(c *client.QQClient, msg *message.GroupMessage) {
 	resp, err := http.Get("https://feedback.minecraft.net/hc/en-us/categories/115000410252-Knowledge-Base")
 	if err != nil {
 		log.Println("http get error.")
+		m := message.NewSendingMessage().Append(message.NewText("请求失败，请重试！"))
+		c.SendGroupMessage(msg.GroupCode, m)
 	} else {
 		defer resp.Body.Close()
 		body, err := ioutil.ReadAll(resp.Body)
@@ -166,16 +168,16 @@ func update(c *client.QQClient, msg *message.GroupMessage) {
 				break
 			}
 		}
-	}
-	build.Reset()
-	out := msg.ToString()
-	if out == "查询最新版本" {
-		m := message.NewSendingMessage().Append(message.NewText("最新测试版：" + beta + "\n最新稳定版：" + release))
-		c.SendGroupMessage(msg.GroupCode, m)
-	}
-	if out == "查询历史版本" {
-		m := message.NewSendingMessage().Append(message.NewText("近五个版本测试版：" + s3 + "\n近五个版本正式版：" + s33))
-		c.SendGroupMessage(msg.GroupCode, m)
+		build.Reset()
+		out := msg.ToString()
+		if out == "查询最新版本" {
+			m := message.NewSendingMessage().Append(message.NewText("最新测试版：" + beta + "\n最新稳定版：" + release))
+			c.SendGroupMessage(msg.GroupCode, m)
+		}
+		if out == "查询历史版本" {
+			m := message.NewSendingMessage().Append(message.NewText("近五个版本测试版：" + s3 + "\n近五个版本正式版：" + s33))
+			c.SendGroupMessage(msg.GroupCode, m)
+		}
 	}
 }
 
@@ -196,7 +198,6 @@ func Substr(str string, start, length int) string {
 	rs := []rune(str)
 	rl := len(rs)
 	end := 0
-
 	if start < 0 {
 		start = rl - 1 + start
 	}
@@ -205,7 +206,6 @@ func Substr(str string, start, length int) string {
 	if start > end {
 		start, end = end, start
 	}
-
 	if start < 0 {
 		start = 0
 	}
@@ -218,7 +218,6 @@ func Substr(str string, start, length int) string {
 	if end > rl {
 		end = rl
 	}
-
 	return string(rs[start:end])
 }
 func GetBetweenStr(str, start, end string) string {
